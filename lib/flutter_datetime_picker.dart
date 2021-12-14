@@ -3,7 +3,6 @@ library flutter_datetime_picker;
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_datetime_picker/src/datetime_picker_theme.dart';
 import 'package:flutter_datetime_picker/src/date_model.dart';
 import 'package:flutter_datetime_picker/src/i18n_model.dart';
@@ -474,6 +473,7 @@ class _DatePickerState extends State<_DatePickerComponent> {
   Widget _renderTitleActionsView(DatePickerTheme theme) {
     final done = _localeDone();
     final cancel = _localeCancel();
+    final today = _localeToday();
 
     return Container(
       height: theme.titleHeight,
@@ -506,6 +506,23 @@ class _DatePickerState extends State<_DatePickerComponent> {
               pressedOpacity: 0.3,
               padding: EdgeInsetsDirectional.only(end: 16, top: 0),
               child: Text(
+                '$today',
+                style: theme.doneStyle,
+              ),
+              onPressed: () {
+                Navigator.pop(context, DateTime.now());
+                if (widget.route.onConfirm != null) {
+                  widget.route.onConfirm!(DateTime.now());
+                }
+              },
+            ),
+          ),
+          Container(
+            height: theme.titleHeight,
+            child: CupertinoButton(
+              pressedOpacity: 0.3,
+              padding: EdgeInsetsDirectional.only(end: 16, top: 0),
+              child: Text(
                 '$done',
                 style: theme.doneStyle,
               ),
@@ -528,6 +545,10 @@ class _DatePickerState extends State<_DatePickerComponent> {
 
   String _localeCancel() {
     return i18nObjInLocale(widget.locale)['cancel'] as String;
+  }
+
+  String _localeToday() {
+    return i18nObjInLocale(widget.locale)['today'] as String;
   }
 }
 
